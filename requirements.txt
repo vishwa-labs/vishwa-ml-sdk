@@ -1,1 +1,2 @@
-opentelemetry-instrumentation-requests
+-r requirements/base_requirements.txt
+-r requirements/langchain_requirements.txt
