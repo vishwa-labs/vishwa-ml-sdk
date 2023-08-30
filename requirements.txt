@@ -1,2 +1,2 @@
 -r requirements/base_requirements.txt
--r requirements/langchain_requirements.txt
+-r requirements/requirements_langchain.txt
