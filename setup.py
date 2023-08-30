@@ -16,6 +16,10 @@ def read_requirements(file_name):
                 requirements.append(line)
     return requirements
 
+
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
+
 setup(
     name='xpuls-mlmonitor',
     version='0.0.1',
@@ -29,5 +33,7 @@ setup(
     extras_require={
         'langchain': read_requirements('requirements/requirements_langchain.txt'),
         'all': read_requirements('requirements.txt')
-    }
+    },
+    long_description_content_type='text/markdown',
+    long_description=long_description,
 )
