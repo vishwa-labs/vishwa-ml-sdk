@@ -17,8 +17,7 @@
 pip install xpuls-mlmonitor
 ```
 
-
-## Usage
+## Usage Example
 ```python
 from xpuls.mlmonitor.langchain.instrument import LangchainTelemetry
 
@@ -29,6 +28,10 @@ default_labels = {"service": "ml-project-service", "k8s-cluster": "app0", "names
 LangchainTelemetry(default_labels=default_labels).auto_instrument()
 
 ```
+
+## Documentation
+
+- [Langchain](./docs/langchain.md) usage guide
 
 ## License
 

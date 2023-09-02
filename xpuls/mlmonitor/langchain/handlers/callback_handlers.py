@@ -45,6 +45,8 @@ class CallbackHandler(AsyncCallbackHandler):
         self.chain_start_time = None
         self.chain_start_metrics = None
 
+        # self.extra_labels = extra_labels
+
     def _get_model_name(self, data, model_type):
         if model_type == c.WORD_CHAT_MODELS:
             model_info = get_safe_dict_value(get_safe_dict_value(
@@ -175,7 +177,7 @@ class CallbackHandler(AsyncCallbackHandler):
         self.chain_start_time = time.time()  # Record start time
         self.ln_metrics.add_chain_counter(self.chain_start_metrics)
 
-        self.log.debug(f"on_chain_start, {serialized}, {inputs}, {kwargs}")
+        self.log.info(f"on_chain_start, {serialized}, {inputs}, {kwargs}")
 
     def on_chain_end(self, outputs: Dict[str, Any], **kwargs: Any) -> Any:
         """Run when chain ends running."""
