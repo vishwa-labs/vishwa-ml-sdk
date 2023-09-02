@@ -153,7 +153,7 @@ class LangchainPrometheusMetrics:
             list(default_labels.keys())
         )
 
-    def get_default_labels(self) :
+    def get_default_labels(self):
         return self.default_labels
 
     def add_chain_counter(self, chain_metrics: LangchainChainMetrics):
