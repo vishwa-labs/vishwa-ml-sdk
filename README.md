@@ -40,7 +40,7 @@ def get_response_using_agent_alpha(prompt, query):
 
 ## Complete Usage Guides
 
-- [Langchain Framework](./docs/langchain.md) 
+- [Langchain Framework](./docs/langchain.md) + [Grafana Template](./dashboards/grafana_langchain.json)
 
 ## License
 

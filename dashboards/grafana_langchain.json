@@ -1,0 +1,2239 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 7,
+      "panels": [],
+      "title": "Langchain - Agent: $agent_name",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
+      "id": 8,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sort(\n    100 * \n    increase(langchain_agent_run_latency_bucket{agent_name=\"$agent_name\"}[1h]) \n    / \n    scalar(sum(increase(langchain_agent_run_latency_bucket{agent_name=\"$agent_name\"}[1h])))\n)\n",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "{{le}}s",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "Langchain - Chain Latency Distribution Past 1h",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(rate(langchain_agent_run_latency_sum{agent_name=\"$agent_name\"}[1m])) / sum(rate(langchain_agent_run_latency_count{agent_name=\"$agent_name\"}[1m]))\n",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "Average Latency",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.90, sum(rate(langchain_agent_run_latency_bucket{agent_name=\"$agent_name\"}[1m])) by (le))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "p90",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.95, sum(rate(langchain_agent_run_latency_bucket{agent_name=\"$agent_name\"}[1m])) by (le))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "p95",
+          "range": true,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.99, sum(rate(langchain_agent_run_latency_bucket[1m])) by (le))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "p99",
+          "range": true,
+          "refId": "D"
+        }
+      ],
+      "title": "Langchain - Agent Latency",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 6,
+      "panels": [],
+      "title": "Langchain - Chains",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "rate(langchain_chain_execution_total{execution_step=\"on_chain_start\", agent_name=\"$agent_name\"}[1m])",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{ml_model_name}},{{ml_model_type}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Chain Executions Per Minute",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(rate(langchain_chain_latency_sum{ml_model_name=\"$model_name\", ml_model_type=\"$model_type\", agent_name=\"$agent_name\"}[1m])) / sum(rate(langchain_chain_latency_count{ml_model_name=\"$model_name\", ml_model_type=\"$model_type\", agent_name=\"$agent_name\"}[1m]))\n",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "Average Latency",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.90, sum(rate(langchain_chain_latency_bucket{ml_model_name=\"$model_name\", ml_model_type=\"$model_type\", agent_name=\"$agent_name\"}[1m])) by (le))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "p90",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.95, sum(rate(langchain_chain_latency_bucket{ml_model_name=\"$model_name\", ml_model_type=\"$model_type\", agent_name=\"$agent_name\"}[1m])) by (le))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "p95",
+          "range": true,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.99, sum(rate(langchain_chain_latency_bucket{ml_model_name=\"$model_name\", ml_model_type=\"$model_type\", agent_name=\"$agent_name\"}[1m])) by (le))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "p99",
+          "range": true,
+          "refId": "D"
+        }
+      ],
+      "title": "Langchain - Chain Latency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 18
+      },
+      "id": 4,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sort(sum(increase(langchain_chain_latency_bucket{ml_model_type=\"$model_type\", ml_model_name=\"$model_name\", agent_name=\"$agent_name\"}[3h])) by (le))",
+          "format": "time_series",
+          "hide": true,
+          "instant": true,
+          "legendFormat": "{{le}}",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sort(\n    100 * \n    increase(langchain_chain_latency_bucket{ml_model_type=\"$model_type\", ml_model_name=\"$model_name\", agent_name=\"$agent_name\"}[3h]) \n    / \n    scalar(sum(increase(langchain_chain_latency_bucket{ml_model_type=\"$model_type\", ml_model_name=\"$model_name\", agent_name=\"$agent_name\"}[3h])))\n)\n",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "{{le}}s",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "Langchain - Chain Latency Distribution Past 3h",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 18
+      },
+      "id": 5,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sort(\n    100 * \n    increase(langchain_chain_latency_bucket{ml_model_type=\"$model_type\", ml_model_name=\"$model_name\", agent_name=\"$agent_name\"}[1h]) \n    / \n    scalar(sum(increase(langchain_chain_latency_bucket{ml_model_type=\"$model_type\", ml_model_name=\"$model_name\", agent_name=\"$agent_name\"}[1h])))\n)\n",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "{{le}}s",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "Langchain - Chain Latency Distribution Past 1h",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 26
+      },
+      "id": 26,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "increase(langchain_chain_execution_total{execution_step=\"on_chain_end\", agent_name=\"$agent_name\", ml_model_type=\"$model_type\", ml_model_name=\"$model_name\"}[1h])\n",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{usage_type}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Langchain Chain Usage past 1hr - Success",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 26
+      },
+      "id": 27,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "increase(langchain_chain_execution_total{execution_step=\"on_chain_error\", agent_name=\"$agent_name\", ml_model_type=\"$model_type\", ml_model_name=\"$model_name\"}[1h])\n",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{usage_type}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Langchain Chain Usage past 1hr - Error",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 30
+      },
+      "id": 10,
+      "panels": [],
+      "title": "Langchain - LLM Usage",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 31
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "rate(langchain_chat_model_total{execution_step=\"on_llm_end\", agent_name=\"$agent_name\"}[1m])",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{ml_model_name}},{{ml_model_type}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "LLM Executions Per Minute",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 31
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(rate(langchain_chat_model_latency_sum{ml_model_name=\"$model_name\", ml_model_type=\"$model_type\", agent_name=\"$agent_name\"}[1m])) / sum(rate(langchain_chat_model_latency_count{ml_model_name=\"$model_name\", ml_model_type=\"$model_type\", agent_name=\"$agent_name\"}[1m]))\n",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "Average Latency",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.90, sum(rate(langchain_chat_model_latency_bucket{ml_model_name=\"$model_name\", ml_model_type=\"$model_type\", agent_name=\"$agent_name\"}[1m])) by (le))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "p90",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.95, sum(rate(langchain_chat_model_latency_bucket{ml_model_name=\"$model_name\", ml_model_type=\"$model_type\", agent_name=\"$agent_name\"}[1m])) by (le))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "p95",
+          "range": true,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.99, sum(rate(langchain_chat_model_latency_bucket{ml_model_name=\"$model_name\", ml_model_type=\"$model_type\", agent_name=\"$agent_name\"}[1m])) by (le))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "p99",
+          "range": true,
+          "refId": "D"
+        }
+      ],
+      "title": "Langchain - LLM Latency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 39
+      },
+      "id": 12,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sort(sum(increase(langchain_chat_model_latency_bucket{ml_model_type=\"$model_type\", ml_model_name=\"$model_name\", agent_name=\"$agent_name\"}[3h])) by (le))",
+          "format": "time_series",
+          "hide": true,
+          "instant": true,
+          "legendFormat": "{{le}}",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sort(\n    100 * \n    increase(langchain_chat_model_latency_bucket{ml_model_type=\"$model_type\", ml_model_name=\"$model_name\", agent_name=\"$agent_name\"}[3h]) \n    / \n    scalar(sum(increase(langchain_chat_model_latency_bucket{ml_model_type=\"$model_type\", ml_model_name=\"$model_name\", agent_name=\"$agent_name\"}[3h])))\n)\n",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "{{le}}s",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "Langchain - LLM Latency Distribution Past 3h",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 39
+      },
+      "id": 22,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sort(sum(increase(langchain_chat_model_latency_bucket{ml_model_type=\"$model_type\", ml_model_name=\"$model_name\", agent_name=\"$agent_name\"}[3h])) by (le))",
+          "format": "time_series",
+          "hide": true,
+          "instant": true,
+          "legendFormat": "{{le}}",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sort(\n    100 * \n    increase(langchain_chat_model_latency_bucket{ml_model_type=\"$model_type\", ml_model_name=\"$model_name\", agent_name=\"$agent_name\"}[3h]) \n    / \n    scalar(sum(increase(langchain_chat_model_latency_bucket{ml_model_type=\"$model_type\", ml_model_name=\"$model_name\", agent_name=\"$agent_name\"}[3h])))\n)\n",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "{{le}}s",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "Langchain - LLM Latency Distribution Past 3h",
+      "type": "bargauge"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 47
+      },
+      "id": 14,
+      "panels": [],
+      "title": "OpenAI - Tokens Usage",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 48
+      },
+      "id": 15,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "increase(langchain_openai_tokens_total{agent_name=\"$agent_name\", ml_model_name=\"$model_name\"}[1m])",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{usage_type}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "OpenAI Tokens Used per Minute",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 12,
+        "y": 48
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "increase(langchain_openai_tokens_total{agent_name=\"$agent_name\", ml_model_name=\"$model_name\", usage_type=\"total_tokens\"}[1h])",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{usage_type}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Tokens used in last 1hr - total_tokens",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 18,
+        "y": 48
+      },
+      "id": 18,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "increase(langchain_openai_tokens_total{agent_name=\"$agent_name\", ml_model_name=\"$model_name\", usage_type=\"completion_tokens\"}[1h])",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{usage_type}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Tokens used in last 1hr - completion_tokens",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 12,
+        "y": 51
+      },
+      "id": 17,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "increase(langchain_openai_tokens_total{agent_name=\"$agent_name\", ml_model_name=\"$model_name\", usage_type=\"prompt_tokens\"}[1h])",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{usage_type}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Tokens used in last 1hr - prompt_tokens",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 56
+      },
+      "id": 20,
+      "panels": [],
+      "title": "Langchain - Tools",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 57
+      },
+      "id": 19,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "increase(langchain_tools_usage_total{agent_name=\"$agent_name\", execution_step=\"on_tool_start\"}[1m])",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{action}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Langchain - Tool Usage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 57
+      },
+      "id": 21,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(rate(langchain_tool_latency_sum{agent_name=\"$agent_name\"}[1m])) / sum(rate(langchain_tool_latency_count{ agent_name=\"$agent_name\"}[1m]))\n",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "Average Latency",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.90, sum(rate(langchain_tool_latency_bucket{agent_name=\"$agent_name\"}[1m])) by (le))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "p90",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.95, sum(rate(langchain_tool_latency_bucket{agent_name=\"$agent_name\"}[1m])) by (le))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "p95",
+          "range": true,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.99, sum(rate(langchain_tool_latency_bucket{agent_name=\"$agent_name\"}[1m])) by (le))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "p99",
+          "range": true,
+          "refId": "D"
+        }
+      ],
+      "title": "Langchain - Tool Latency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 65
+      },
+      "id": 13,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sort(sum(increase(langchain_tool_latency_bucket{agent_name=\"$agent_name\", action=\"$tool_action\"}[1h])) by (le))",
+          "format": "time_series",
+          "hide": true,
+          "instant": true,
+          "legendFormat": "{{le}}",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sort(\n    100 * \n    increase(langchain_tool_latency_bucket{agent_name=\"$agent_name\",action=\"$tool_action\"}[1h]) \n    / \n    scalar(sum(increase(langchain_tool_latency_bucket{agent_name=\"$agent_name\",action=\"$tool_action\"}[1h])))\n)\n",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "{{le}}s",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "Langchain - LLM Latency Distribution Past 1h",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 65
+      },
+      "id": 23,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sort(sum(increase(langchain_tool_latency_bucket{agent_name=\"$agent_name\", action=\"$tool_action\"}[3h])) by (le))",
+          "format": "time_series",
+          "hide": true,
+          "instant": true,
+          "legendFormat": "{{le}}",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sort(\n    100 * \n    increase(langchain_tool_latency_bucket{agent_name=\"$agent_name\",action=\"$tool_action\"}[3h]) \n    / \n    scalar(sum(increase(langchain_tool_latency_bucket{agent_name=\"$agent_name\",action=\"$tool_action\"}[3h])))\n)\n",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "{{le}}s",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "Langchain - LLM Latency Distribution Past 1h",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 73
+      },
+      "id": 24,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "increase(langchain_tools_usage_total{execution_step=\"on_tool_end\", agent_name=\"$agent_name\", action=\"$tool_action\"}[1h])\n",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{usage_type}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Tool Usage past 1hr - Success ",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 73
+      },
+      "id": 25,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "increase(langchain_tools_usage_total{execution_step=\"on_tool_error\", agent_name=\"$agent_name\", action=\"$tool_action\"}[1h])\n",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{usage_type}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Tool Usage past 1hr - Errors ",
+      "type": "stat"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [
+    "langchain",
+    "xpuls-labs",
+    "xpuls.ai",
+    "mlmonitor"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "default_agent",
+          "value": "default_agent"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+        },
+        "definition": "label_values(agent_name)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "agent_name",
+        "multi": false,
+        "name": "agent_name",
+        "options": [],
+        "query": {
+          "query": "label_values(agent_name)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "chat_models",
+          "value": "chat_models"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+        },
+        "definition": "label_values(langchain_chain_execution_total{agent_name=\"$agent_name\"},ml_model_type)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "model_type",
+        "multi": false,
+        "name": "model_type",
+        "options": [],
+        "query": {
+          "query": "label_values(langchain_chain_execution_total{agent_name=\"$agent_name\"},ml_model_type)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "gpt-35-turbo",
+          "value": "gpt-35-turbo"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "a2d646c8-7850-41b8-982c-6c0eb39d96dc"
+        },
+        "definition": "label_values(langchain_chain_execution_total{ml_model_type=\"$model_type\"},ml_model_name)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "model_name",
+        "multi": false,
+        "name": "model_name",
+        "options": [],
+        "query": {
+          "query": "label_values(langchain_chain_execution_total{ml_model_type=\"$model_type\"},ml_model_name)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Current Search",
+          "value": "Current Search"
+        },
+        "definition": "label_values(langchain_tools_usage_total{agent_name=\"$agent_name\"},action)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "tool_action",
+        "multi": false,
+        "name": "tool_action",
+        "options": [],
+        "query": {
+          "query": "label_values(langchain_tools_usage_total{agent_name=\"$agent_name\"},action)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Langchain Observability Dashboard",
+  "uid": "e6473e10-af22-4fc3-bd1c-fbeb1637250f",
+  "version": 40,
+  "weekStart": ""
+}
