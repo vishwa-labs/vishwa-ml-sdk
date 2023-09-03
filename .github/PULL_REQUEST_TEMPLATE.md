@@ -3,6 +3,7 @@
 
 Thanks for sending a pull request!
 
+<!--
 We really appreciate your sincere efforts There are still a few things to run through
 
 Please fill out the blanks below before requesting a code review.
@@ -22,7 +23,7 @@ Name your Pull Request with one of the following prefixes, e.g. "feat: add suppo
 
 Describe your changes in detail. Attach screenshots here if appropriate.
 
-<!--
+
 Once you're done with this, someone from xpuls-labs core team or extended team will help review your PR. If no one has reviewed your PR after a week have passed, don't hesitate to post a new comment and ping @SHARANTANGEDA. Notifications sometimes might get lost 🥲.
 -->
 
