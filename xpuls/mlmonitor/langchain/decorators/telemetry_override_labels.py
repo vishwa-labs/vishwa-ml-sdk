@@ -2,7 +2,7 @@ import contextvars
 from typing import Optional, Any, Dict
 
 
-class TelemetryExtraLabels:
+class TelemetryOverrideLabels:
     _context: contextvars.ContextVar[Optional[Dict[str, Any]]] = contextvars.ContextVar('telemetry_extra_labels_vars',
                                                                                         default=None)
 

@@ -3,31 +3,29 @@ from typing import Dict, Any
 
 from langchain.chains.base import Chain
 
-from xpuls.mlmonitor.langchain.decorators.telemetry_extra_labels import TelemetryExtraLabels
+from xpuls.mlmonitor.langchain.decorators.telemetry_override_labels import TelemetryOverrideLabels
 from xpuls.mlmonitor.langchain.handlers.callback_handlers import CallbackHandler
 
 from xpuls.mlmonitor.langchain.profiling.prometheus import LangchainPrometheusMetrics
 
 
-def patch_chain(default_labels: Dict[str, Any]):
+def patch_chain(ln_metrics: LangchainPrometheusMetrics):
     # Store the original run method
     original_run = Chain.run
     original_arun = Chain.arun
 
     def patched_run(self, *args, **kwargs):
         try:
-            extra_labels = TelemetryExtraLabels._context.get()
-            if extra_labels is None:
-                extra_labels = {}
+            override_labels = TelemetryOverrideLabels._context.get()
+            if override_labels is None:
+                override_labels = {}
         except Exception as e:
-            extra_labels = {}
+            override_labels = {}
             print(f"Error getting labels. Exception: {e}")
 
         chain_run_id = str(uuid.uuid4())
-        agg_labels = dict(default_labels, **extra_labels)
-        ln_metrics = LangchainPrometheusMetrics(agg_labels)
-        callback_handler = CallbackHandler(ln_metrics, chain_run_id)
-        with ln_metrics.agent_run_histogram.labels(**ln_metrics.get_default_labels()).time():
+        callback_handler = CallbackHandler(ln_metrics, chain_run_id, override_labels)
+        with ln_metrics.agent_run_histogram.labels(**dict(ln_metrics.get_default_labels(), **override_labels)).time():
             if 'callbacks' in kwargs:
                 kwargs['callbacks'].append(callback_handler)
             else:
@@ -38,17 +36,17 @@ def patch_chain(default_labels: Dict[str, Any]):
 
     def patched_arun(self, *args, **kwargs):
         try:
-            extra_labels = TelemetryExtraLabels._context.get()
-            if extra_labels is None:
-                extra_labels = {}
+            override_labels = TelemetryOverrideLabels._context.get()
+            if override_labels is None:
+                override_labels = {}
         except Exception as e:
-            extra_labels = {}
+            override_labels = {}
             print(f"Error getting labels. Exception: {e}")
+
+
         chain_run_id = str(uuid.uuid4())
-        agg_labels = dict(default_labels, **extra_labels)
-        ln_metrics = LangchainPrometheusMetrics(agg_labels)
-        callback_handler = CallbackHandler(ln_metrics, chain_run_id)
-        with ln_metrics.agent_run_histogram.labels(**ln_metrics.get_default_labels()).time():
+        callback_handler = CallbackHandler(ln_metrics, chain_run_id, override_labels)
+        with ln_metrics.agent_run_histogram.labels(**dict(ln_metrics.get_default_labels(), **override_labels)).time():
             if 'callbacks' in kwargs:
                 kwargs['callbacks'].append(callback_handler)
             else:

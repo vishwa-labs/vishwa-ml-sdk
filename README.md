@@ -22,16 +22,25 @@ pip install xpuls-mlmonitor
 from xpuls.mlmonitor.langchain.instrument import LangchainTelemetry
 
 # Add default labels that will be added to all captured metrics
-default_labels = {"service": "ml-project-service", "k8s-cluster": "app0", "namespace": "dev"}
+default_labels = {"service": "ml-project-service", "k8s-cluster": "app0", "namespace": "dev", "agent_name": "fallback_value"}
 
 # Enable the auto-telemetry
 LangchainTelemetry(default_labels=default_labels).auto_instrument()
 
+## [Optional] Override labels for scope of decorator [Useful if you have multiple scopes where you need to override the default label values]
+@TelemetryOverrideLabels(agent_name="chat_agent_alpha")
+def get_response_using_agent_alpha(prompt, query):
+    agent = initialize_agent(llm=chat_model,
+                             verbose=True,
+                             agent=CONVERSATIONAL_REACT_DESCRIPTION,
+                             memory=memory)
+
+    res = agent.run(f"{prompt}. \n Query: {query}")
 ```
 
-## Documentation
+## Complete Usage Guides
 
-- [Langchain](./docs/langchain.md) usage guide
+- [Langchain Framework](./docs/langchain.md) 
 
 ## License
 

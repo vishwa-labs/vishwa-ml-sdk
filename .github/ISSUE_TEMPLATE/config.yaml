@@ -1,0 +1,12 @@
+blank_issues_enabled: true
+version: 2.1
+contact_links:
+  - name: Reach out to cognicraft.tech
+    url: https://cognicraft.tech
+    about: For more information about idea and people behind this OSS project.
+  - name: Xpuls Labs Discussions
+    url: https://github.com/xpuls-labs/xpuls-mlmonitor-python/discussions
+    about: Please ask general questions here.
+  - name: Reachout to owner
+    url: sharan@cognicraft.tech
+    about: Contact the maintainer for catchup or support

@@ -6,7 +6,8 @@
 from xpuls.mlmonitor.langchain.instrument import LangchainTelemetry
 
 # Add default labels that will be added to all captured metrics
-default_labels = {"service": "ml-project-service", "k8s-cluster": "app0", "namespace": "dev"}
+default_labels = {"service": "ml-project-service", "k8s-cluster": "app0", "namespace": "dev",  
+                  "agent_name": "fallback_value"}
 
 # Enable the auto-telemetry
 LangchainTelemetry(default_labels=default_labels).auto_instrument()
@@ -14,15 +15,19 @@ LangchainTelemetry(default_labels=default_labels).auto_instrument()
 ```
 
 ### Advanced Guide
-- #### Decorator for labelling agents in multi-agent systems [Optional] 
+#### 1. Decorator for overriding default labels 
+Can be used in LLM Apps which have multi-agent in the workflow [Optional] 
+
+Only labels defined can be overriden, if you wish you add a new label, then it needs to defined in `default_labels`
 ```python
-@TelemetryExtraLabels(agent_name="default_agent", label2="value2")  # `TelemetryExtraLabels` Decorate the agent function
-def get_default_agent_response(chat_model, memory, prompt_template, query): # Example function
+# Overriding value `agent_nam`e defined in `default_labels`
+@TelemetryOverrideLabels(agent_name="chat_agent_alpha")  # `agent_name` here is overriden for the scope of this function 
+def get_response_using_agent_alpha(prompt, query):
     agent = initialize_agent(llm=chat_model,
                              verbose=True,
                              agent=CONVERSATIONAL_REACT_DESCRIPTION,
                              memory=memory)
 
-    res = agent.run(f"{prompt_template}. \n Query: {query}")
+    res = agent.run(f"{prompt}. \n Query: {query}")
 ```
 

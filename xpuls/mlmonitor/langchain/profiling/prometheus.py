@@ -156,42 +156,49 @@ class LangchainPrometheusMetrics:
     def get_default_labels(self):
         return self.default_labels
 
-    def add_chain_counter(self, chain_metrics: LangchainChainMetrics):
+    def get_safe_override_labels(self, override_labels: Dict[str, str]):
+        return {k: v for k, v in override_labels.items() if k in self.default_labels.keys()}
+
+    def add_chain_counter(self, chain_metrics: LangchainChainMetrics, override_labels: Dict[str, str]):
         self.chain_execution_counter.labels(
-            **dict(chain_metrics, **self.default_labels)
+            **dict(chain_metrics, **dict(self.default_labels, **self.get_safe_override_labels(override_labels)))
         ).inc()
 
-    def add_tools_usage_counter(self, tool_metrics: LangchainToolMetrics):
+    def add_tools_usage_counter(self, tool_metrics: LangchainToolMetrics, override_labels: Dict[str, str]):
         self.tools_usage_counter.labels(
-            **dict(tool_metrics, **self.default_labels)
+            **dict(tool_metrics, **dict(self.default_labels, **self.get_safe_override_labels(override_labels)))
         ).inc()
 
     def add_openai_tokens_usage(self, openai_tokens: LangchainOpenAITokens,
-                                usage_type: str, token_count: int):
+                                usage_type: str, token_count: int, override_labels: Dict[str, str]):
         self.openai_tokens_counter.labels(
-            **dict(openai_tokens, **self.default_labels, **{'usage_type': usage_type})
+            **dict(openai_tokens, **{'usage_type': usage_type},
+                   **dict(self.default_labels, **self.get_safe_override_labels(override_labels)))
         ).inc(token_count)
 
-    def add_chat_model_counter(self, chat_metrics: LangchainChatModelMetrics):
+    def add_chat_model_counter(self, chat_metrics: LangchainChatModelMetrics, override_labels: Dict[str, str]):
         self.chat_model_counter.labels(
-            **dict(chat_metrics, **self.default_labels)
+            **dict(chat_metrics, **dict(self.default_labels, **self.get_safe_override_labels(override_labels)))
         ).inc()
 
-    def observe_chain_latency(self, chain_metrics: LangchainChainMetrics, elapsed_time: float):
+    def observe_chain_latency(self, chain_metrics: LangchainChainMetrics, elapsed_time: float,
+                              override_labels: Dict[str, str]):
 
         self.chain_execution_histogram.labels(
-            **dict(chain_metrics, **self.default_labels)
+            **dict(chain_metrics, **dict(self.default_labels, **self.get_safe_override_labels(override_labels)))
         ).observe(elapsed_time)
 
-    def observe_tool_latency(self, tool_metrics: LangchainToolMetrics, elapsed_time: float):
+    def observe_tool_latency(self, tool_metrics: LangchainToolMetrics, elapsed_time: float,
+                             override_labels: Dict[str, str]):
 
         self.tools_execution_histogram.labels(
-            **dict(tool_metrics, **self.default_labels)
+            **dict(tool_metrics, **dict(self.default_labels, **self.get_safe_override_labels(override_labels)))
         ).observe(elapsed_time)
 
-    def observe_chat_model_latency(self, model_metrics: LangchainChatModelMetrics, elapsed_time: float):
+    def observe_chat_model_latency(self, model_metrics: LangchainChatModelMetrics, elapsed_time: float,
+                                   override_labels: Dict[str, str]):
 
         self.chat_model_execution_histogram.labels(
-            **dict(model_metrics, **self.default_labels)
+            **dict(model_metrics, **dict(self.default_labels, **self.get_safe_override_labels(override_labels)))
         ).observe(elapsed_time)
 

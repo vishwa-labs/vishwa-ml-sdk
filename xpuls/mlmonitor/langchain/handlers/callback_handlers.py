@@ -26,7 +26,7 @@ tracer = trace.get_tracer(__name__)
 class CallbackHandler(AsyncCallbackHandler):
     log = logging.getLogger()
 
-    def __init__(self, ln_metrics: LangchainPrometheusMetrics, chain_run_id: str) -> None:
+    def __init__(self, ln_metrics: LangchainPrometheusMetrics, chain_run_id: str, override_labels: Dict[str, str]) -> None:
         self.llm_start_time = None
         self.llm_end_time = None
 
@@ -45,7 +45,7 @@ class CallbackHandler(AsyncCallbackHandler):
         self.chain_start_time = None
         self.chain_start_metrics = None
 
-        # self.extra_labels = extra_labels
+        self.override_labels = override_labels
 
     def _get_model_name(self, data, model_type):
         if model_type == c.WORD_CHAT_MODELS:
@@ -87,7 +87,7 @@ class CallbackHandler(AsyncCallbackHandler):
             other_tags=','.join(list(tags)),
         )
         self.chat_start_time = time.time()  # Record start time
-        self.ln_metrics.add_chat_model_counter(self.chat_model_start_metrics)
+        self.ln_metrics.add_chat_model_counter(self.chat_model_start_metrics, self.override_labels)
 
         self.log.debug(f"on_chat_model_start, {serialized}, {messages}, {kwargs}")
 
@@ -108,11 +108,11 @@ class CallbackHandler(AsyncCallbackHandler):
                 other_tags=','.join(list(tags)),
             )
             self.ln_metrics.add_openai_tokens_usage(openai_tokens, 'prompt_tokens',
-                                                    int(dict(token_usage)['prompt_tokens']))
+                                                    int(dict(token_usage)['prompt_tokens']), self.override_labels)
             self.ln_metrics.add_openai_tokens_usage(openai_tokens, 'total_tokens',
-                                                    int(dict(token_usage)['total_tokens']))
+                                                    int(dict(token_usage)['total_tokens']), self.override_labels)
             self.ln_metrics.add_openai_tokens_usage(openai_tokens, 'completion_tokens',
-                                                    int(dict(token_usage)['completion_tokens']))
+                                                    int(dict(token_usage)['completion_tokens']), self.override_labels)
         if self.chat_model_start_metrics is not None:
 
             llm_end_metrics = LangchainChatModelMetrics(
@@ -125,8 +125,8 @@ class CallbackHandler(AsyncCallbackHandler):
                 other_tags=','.join(list(tags)),
             )
             elapsed_time = time.time() - self.chat_start_time  # Record start time
-            self.ln_metrics.add_chat_model_counter(llm_end_metrics)
-            self.ln_metrics.observe_chat_model_latency(llm_end_metrics, elapsed_time)
+            self.ln_metrics.add_chat_model_counter(llm_end_metrics, self.override_labels)
+            self.ln_metrics.observe_chat_model_latency(llm_end_metrics, elapsed_time, self.override_labels)
 
         elif self.llm_start_time is not None:
             llm_end_metrics = LangchainChatModelMetrics(
@@ -139,8 +139,8 @@ class CallbackHandler(AsyncCallbackHandler):
                 other_tags=','.join(list(tags)),
             )
             elapsed_time = time.time() - self.llm_start_time  # Record start time
-            self.ln_metrics.add_chat_model_counter(llm_end_metrics)
-            self.ln_metrics.observe_chat_model_latency(llm_end_metrics, elapsed_time)
+            self.ln_metrics.add_chat_model_counter(llm_end_metrics, self.override_labels)
+            self.ln_metrics.observe_chat_model_latency(llm_end_metrics, elapsed_time, self.override_labels)
 
         self.log.debug(f"on_llm_end, {response}, {kwargs}")
 
@@ -175,7 +175,7 @@ class CallbackHandler(AsyncCallbackHandler):
         )
 
         self.chain_start_time = time.time()  # Record start time
-        self.ln_metrics.add_chain_counter(self.chain_start_metrics)
+        self.ln_metrics.add_chain_counter(self.chain_start_metrics, self.override_labels)
 
         self.log.info(f"on_chain_start, {serialized}, {inputs}, {kwargs}")
 
@@ -203,8 +203,8 @@ class CallbackHandler(AsyncCallbackHandler):
 
         elapsed_time = time.time() - self.chat_start_time
 
-        self.ln_metrics.add_chain_counter(chain_end_metrics)
-        self.ln_metrics.observe_chain_latency(chain_end_metrics, elapsed_time)
+        self.ln_metrics.add_chain_counter(chain_end_metrics, self.override_labels)
+        self.ln_metrics.observe_chain_latency(chain_end_metrics, elapsed_time, self.override_labels)
         self.log.debug(f"on_chain_end, {outputs}, {kwargs}, {self.chat_start_time}")
 
     def on_chain_error(self, error: Union[Exception, KeyboardInterrupt], **kwargs: Any) -> Any:
@@ -233,8 +233,8 @@ class CallbackHandler(AsyncCallbackHandler):
 
         elapsed_time = time.time() - self.llm_start_time
 
-        self.ln_metrics.add_chain_counter(chain_err_metrics)
-        self.ln_metrics.observe_chain_latency(chain_err_metrics, elapsed_time)
+        self.ln_metrics.add_chain_counter(chain_err_metrics, self.override_labels)
+        self.ln_metrics.observe_chain_latency(chain_err_metrics, elapsed_time, self.override_labels)
         self.log.debug("on_chain_error")
 
     def on_tool_start(
@@ -251,7 +251,7 @@ class CallbackHandler(AsyncCallbackHandler):
             other_tags=','.join(get_safe_dict_value(kwargs, 'tags'))
         )
 
-        self.ln_metrics.add_tools_usage_counter(self.tool_metrics)
+        self.ln_metrics.add_tools_usage_counter(self.tool_metrics, self.override_labels)
         self.log.debug(f"on_tool_start, {serialized}, {input_str}, {kwargs}")
 
     def on_tool_end(self, output: str, **kwargs: Any) -> Any:
@@ -268,8 +268,8 @@ class CallbackHandler(AsyncCallbackHandler):
 
         elapsed_time = time.time() - self.tool_start_time
 
-        self.ln_metrics.add_tools_usage_counter(tool_metrics)
-        self.ln_metrics.observe_tool_latency(tool_metrics, elapsed_time)
+        self.ln_metrics.add_tools_usage_counter(tool_metrics, self.override_labels)
+        self.ln_metrics.observe_tool_latency(tool_metrics, elapsed_time, self.override_labels)
 
         self.log.debug(f"on_tool_end, {output}")
 
@@ -289,8 +289,8 @@ class CallbackHandler(AsyncCallbackHandler):
 
         elapsed_time = time.time() - self.tool_start_time
 
-        self.ln_metrics.add_tools_usage_counter(tool_metrics)
-        self.ln_metrics.observe_tool_latency(tool_metrics, elapsed_time)
+        self.ln_metrics.add_tools_usage_counter(tool_metrics, self.override_labels)
+        self.ln_metrics.observe_tool_latency(tool_metrics, elapsed_time, self.override_labels)
 
         self.log.debug("on_tool_error")
 
