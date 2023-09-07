@@ -35,11 +35,6 @@ chain_latency = Histogram(
         )
 
 class LangchainChainMetrics(BaseModel):
-    @classmethod
-    def get_field_names(cls, alias=False):
-        fields = list(cls.model_json_schema(alias).get("properties").keys())
-        return fields
-
     lc: str
     type: str
     execution_step: str
@@ -53,11 +48,6 @@ class LangchainChainMetrics(BaseModel):
 
 
 class LangchainToolMetrics(BaseModel):
-    @classmethod
-    def get_field_names(cls, alias=False):
-        fields = list(cls.model_json_schema(alias).get("properties").keys())
-        return fields
-
     execution_step: str
     action: str
     agent_type: str
@@ -68,11 +58,6 @@ class LangchainToolMetrics(BaseModel):
 
 
 class LangchainOpenAITokens(BaseModel):
-    @classmethod
-    def get_field_names(cls, alias=False):
-        fields = list(cls.model_json_schema(alias).get("properties").keys())
-        return fields
-
     execution_step: str
     ml_model_type: Optional[str]
     ml_model_name: Optional[str]
@@ -83,11 +68,6 @@ class LangchainOpenAITokens(BaseModel):
 
 
 class LangchainChatModelMetrics(BaseModel):
-    @classmethod
-    def get_field_names(cls, alias=False):
-        fields = list(cls.model_json_schema(alias).get("properties").keys())
-        return fields
-
     lc: str
     type: str
     execution_step: str
@@ -102,10 +82,11 @@ class LangchainChatModelMetrics(BaseModel):
 
 class LangchainPrometheusMetrics:
     def __init__(self, default_labels: Dict[str, Any]):
-        chain_fields = LangchainChainMetrics.get_field_names() + list(default_labels.keys())
-        chat_fields = LangchainChatModelMetrics.get_field_names() + list(default_labels.keys())
-        openai_tokens_field = LangchainOpenAITokens.get_field_names() + list(default_labels.keys()) + ['usage_type']
-        tools_field = LangchainToolMetrics.get_field_names() + list(default_labels.keys())
+        chain_fields = list(LangchainChainMetrics.__fields__.keys()) + list(default_labels.keys())
+        chat_fields = list(LangchainChatModelMetrics.__fields__.keys()) + list(default_labels.keys())
+        openai_tokens_field = list(LangchainOpenAITokens.__fields__.keys()) + list(default_labels.keys()) + ['usage_type']
+        tools_field = list(LangchainToolMetrics.__fields__.keys()) + list(default_labels.keys())
+
         self.default_labels = default_labels
         self.chain_execution_counter = Counter(
             'langchain_chain_execution',
