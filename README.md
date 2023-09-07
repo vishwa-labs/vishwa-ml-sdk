@@ -22,7 +22,7 @@ pip install xpuls-mlmonitor
 from xpuls.mlmonitor.langchain.instrument import LangchainTelemetry
 
 # Add default labels that will be added to all captured metrics
-default_labels = {"service": "ml-project-service", "k8s-cluster": "app0", "namespace": "dev", "agent_name": "fallback_value"}
+default_labels = {"service": "ml-project-service", "k8s_cluster": "app0", "namespace": "dev", "agent_name": "fallback_value"}
 
 # Enable the auto-telemetry
 LangchainTelemetry(default_labels=default_labels).auto_instrument()
