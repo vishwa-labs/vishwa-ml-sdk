@@ -186,9 +186,14 @@ class CallbackHandler(AsyncCallbackHandler):
         parent_run_id = get_safe_dict_value(kwargs, 'parent_run_id')
 
         if self.chain_start_metrics is not None:
-            chain_end_metrics = self.chain_start_metrics.model_copy(
-                update={'execution_step': 'on_chain_end'}, deep=True
-            )
+            if pydantic.__version__.startswith("2"):
+                chain_end_metrics = self.chain_start_metrics.model_copy(
+                    update={'execution_step': 'on_chain_end'}, deep=True
+                )
+            else:
+                chain_end_metrics = self.chain_start_metrics.copy(
+                    update={'execution_step': 'on_chain_end'}, deep=True
+                )
         else:
             chain_end_metrics = LangchainChainMetrics(
                 lc='-1',
@@ -213,9 +218,14 @@ class CallbackHandler(AsyncCallbackHandler):
         parent_run_id = get_safe_dict_value(kwargs, 'parent_run_id')
 
         if self.chain_start_metrics is not None:
-            chain_err_metrics = self.chain_start_metrics.model_copy(
-                update={'execution_step': 'on_chain_error'}, deep=True
-            )
+            if pydantic.__version__.startswith("2"):
+                chain_err_metrics = self.chain_start_metrics.model_copy(
+                    update={'execution_step': 'on_chain_error'}, deep=True
+                )
+            else:
+                chain_err_metrics = self.chain_start_metrics.copy(
+                    update={'execution_step': 'on_chain_error'}, deep=True
+                )
         else:
             chain_err_metrics = LangchainChainMetrics(
                 lc='-1',
