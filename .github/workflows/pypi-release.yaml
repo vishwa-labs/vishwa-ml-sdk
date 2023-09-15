@@ -1,4 +1,4 @@
-name: Release
+name: pypi-release
 on:
   push:
     tags:

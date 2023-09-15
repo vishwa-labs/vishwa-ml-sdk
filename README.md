@@ -1,5 +1,8 @@
 # MLMonitor - Automatic Instrumentation for ML Frameworks
 
+[![PyPI version](https://badge.fury.io/py/xpuls-mlmonitor.svg)](https://badge.fury.io/py/xpuls-mlmonitor)
+[![GitHub version](https://badge.fury.io/gh/xpuls-labs%2Fxpuls-mlmonitor-python.svg)](https://badge.fury.io/gh/xpuls-labs%2Fxpuls-mlmonitor-python)
+![Release built](https://github.com/xpuls-labs/xpuls-mlmonitor-python/actions/workflows/pypi-release/badge.svg?branch=main&x=1)
 
 ## Roadmap
 
