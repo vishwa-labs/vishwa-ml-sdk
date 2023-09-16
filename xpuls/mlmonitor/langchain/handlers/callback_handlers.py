@@ -1,6 +1,8 @@
 import time
 import logging
 from typing import Any, Dict, List, Union
+
+import pydantic
 from langchain.callbacks.base import AsyncCallbackHandler
 
 from langchain.schema.output import LLMResult
