@@ -4,14 +4,9 @@ from typing import Any, Dict, List, Union
 
 import pydantic
 from langchain.callbacks.base import AsyncCallbackHandler
-
 from langchain.schema.output import LLMResult
 from langchain.schema.messages import BaseMessage
-
 from langchain.schema.agent import AgentAction, AgentFinish
-
-from opentelemetry import trace
-from opentelemetry.sdk.trace import TracerProvider
 
 from xpuls.mlmonitor.langchain.profiling.prometheus import LangchainChainMetrics, LangchainPrometheusMetrics, \
     LangchainChatModelMetrics, LangchainOpenAITokens, LangchainToolMetrics
@@ -19,16 +14,13 @@ from xpuls.mlmonitor.utils.common import get_safe_dict_value
 
 from . import constants as c
 # Set the tracer provider and a console exporter
-trace.set_tracer_provider(TracerProvider())
-trace.get_tracer_provider()
-
-tracer = trace.get_tracer(__name__)
 
 
 class CallbackHandler(AsyncCallbackHandler):
     log = logging.getLogger()
 
-    def __init__(self, ln_metrics: LangchainPrometheusMetrics, chain_run_id: str, override_labels: Dict[str, str]) -> None:
+    def __init__(self, ln_metrics: LangchainPrometheusMetrics, chain_run_id: str,
+                 override_labels: Dict[str, str]) -> None:
         self.llm_start_time = None
         self.llm_end_time = None
 

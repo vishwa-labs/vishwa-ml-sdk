@@ -12,6 +12,7 @@ class TelemetryOverrideLabels:
     def __call__(self, func):
         def wrapped_func(*args, **kwargs):
             self._context.set(self.labels)
+
             return func(*args, **kwargs)
 
         return wrapped_func
