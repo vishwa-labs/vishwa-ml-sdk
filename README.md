@@ -23,12 +23,19 @@ pip install xpuls-mlmonitor
 ## Usage Example
 ```python
 from xpuls.mlmonitor.langchain.instrument import LangchainTelemetry
+import os
+
+# Enable this for advance tracking with our xpuls-ml platform
+os.environ["XPULSAI_TRACING_ENABLED"] = "true"
 
 # Add default labels that will be added to all captured metrics
 default_labels = {"service": "ml-project-service", "k8s_cluster": "app0", "namespace": "dev", "agent_name": "fallback_value"}
 
 # Enable the auto-telemetry
-LangchainTelemetry(default_labels=default_labels).auto_instrument()
+LangchainTelemetry(
+  default_labels=default_labels,
+  xpuls_host_url="http://app.xpuls.ai" # Optional param, required when XPULSAI_TRACING is enabled
+).auto_instrument()
 
 ## [Optional] Override labels for scope of decorator [Useful if you have multiple scopes where you need to override the default label values]
 @TelemetryOverrideLabels(agent_name="chat_agent_alpha")
