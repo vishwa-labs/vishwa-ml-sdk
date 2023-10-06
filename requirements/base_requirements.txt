@@ -1,5 +1,4 @@
-opentelemetry-instrumentation-requests
-opentelemetry-api
-opentelemetry-sdk
 prometheus-client
 pydantic
+requests
+urllib3
