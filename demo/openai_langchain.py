@@ -18,10 +18,7 @@ openai.api_base = os.getenv("OPENAI_URL")
 os.environ["OPENAI_API_BASE"] = os.getenv("OPENAI_URL")
 os.environ["OPENAI_API_VERSION"] = "2023-03-15-preview"
 openai.api_version = "2023-03-15-preview"
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
-os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
-os.environ["LANGCHAIN_API_KEY"] = "ls__7c0744f726e242358e25e3a6608293cf"
-# ls__7c0744f726e242358e25e3a6608293cf
+
 default_labels = {"system": "openai-ln-test", "agent_name": "fallback_value"}
 
 LangchainTelemetry(default_labels=default_labels).auto_instrument()
