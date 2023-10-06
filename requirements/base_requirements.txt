@@ -1,2 +1,4 @@
 prometheus-client
 pydantic
+requests
+urllib3

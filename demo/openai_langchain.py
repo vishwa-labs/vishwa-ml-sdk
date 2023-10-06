@@ -19,9 +19,16 @@ os.environ["OPENAI_API_BASE"] = os.getenv("OPENAI_URL")
 os.environ["OPENAI_API_VERSION"] = "2023-03-15-preview"
 openai.api_version = "2023-03-15-preview"
 
+# Set this to enable Advanced prompt tracing with server
+# os.environ["XPULSAI_TRACING_ENABLED"] = "false"
+os.environ["XPULSAI_TRACING_ENABLED"] = "true"
+
 default_labels = {"system": "openai-ln-test", "agent_name": "fallback_value"}
 
-LangchainTelemetry(default_labels=default_labels).auto_instrument()
+LangchainTelemetry(
+    default_labels=default_labels,
+    xpuls_host_url="http://localhost:8000"
+).auto_instrument()
 
 memory = ConversationBufferMemory(memory_key="chat_history")
 chat_model = AzureChatOpenAI(

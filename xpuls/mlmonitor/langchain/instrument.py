@@ -4,17 +4,18 @@ from langsmith import Client
 
 from xpuls.mlmonitor.langchain.patches import patch_chain
 from xpuls.mlmonitor.langchain.profiling.prometheus import LangchainPrometheusMetrics
+from xpuls.mlmonitor.langchain.xpuls_client import XpulsAILangChainClient
 
 
 class LangchainTelemetry:
     def __init__(self, default_labels: Dict[str, Any],
-                 xpuls_host_url="http://localhost:8000",
-                 enable_prometheus=True,
-                 enable_otel_tracing=True,
-                 enable_otel_logging=False):
+                 xpuls_host_url: str = "http://localhost:8000",
+                 enable_prometheus: bool = True,
+                 enable_otel_tracing: bool = True,
+                 enable_otel_logging: bool = False):
         self.ln_metrics = LangchainPrometheusMetrics(default_labels)
 
-        self.xpuls_client = Client(
+        self.xpuls_client = XpulsAILangChainClient(
             api_url=xpuls_host_url
         )
 
