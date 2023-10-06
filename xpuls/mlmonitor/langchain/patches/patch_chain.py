@@ -30,7 +30,7 @@ def patch_chain(ln_metrics: LangchainPrometheusMetrics, xpuls_client: XpulsAILan
         try:
             project_details = MapXpulsProject._context.get()
             if project_details is None:
-                project_details = {}
+                project_details = {'project_id': 'default'}
         except Exception as e:
             project_details = {'project_id': 'default'}
 
