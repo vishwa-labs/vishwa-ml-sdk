@@ -1,0 +1,4 @@
+fastapi
+starlette-exporter
+starlette
+uvicorn
