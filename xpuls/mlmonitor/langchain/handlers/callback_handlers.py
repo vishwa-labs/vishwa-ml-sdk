@@ -9,7 +9,7 @@ from langchain.schema.messages import BaseMessage
 from langchain.schema.agent import AgentAction, AgentFinish
 
 from xpuls.mlmonitor.langchain.profiling.prometheus import LangchainChainMetrics, LangchainPrometheusMetrics, \
-    LangchainChatModelMetrics, LangchainOpenAITokens, LangchainToolMetrics
+    LangchainChatModelMetrics, LLMTokens, LangchainToolMetrics
 from xpuls.mlmonitor.utils.common import get_safe_dict_value
 
 from . import constants as c
@@ -81,6 +81,8 @@ class CallbackHandler(AsyncCallbackHandler):
             other_tags=','.join(list(tags)),
         )
         self.chat_start_time = time.time()  # Record start time
+        if self.llm_start_time is None:
+            self.llm_start_time = time.time()  # Record start time
         self.ln_metrics.add_chat_model_counter(self.chat_model_start_metrics, self.override_labels)
 
         self.log.debug(f"on_chat_model_start, {serialized}, {messages}, {kwargs}")
@@ -92,21 +94,21 @@ class CallbackHandler(AsyncCallbackHandler):
     def on_llm_end(self, response: LLMResult, **kwargs: Any) -> Any:
         """Run when LLM ends running."""
         tags = get_safe_dict_value(kwargs, 'tags')
-        token_usage = get_safe_dict_value(response.llm_output, 'token_usage')
+        token_usage = get_safe_dict_value(response.llm_output, 'token_usage') if response.llm_output is not None else None
         execution_step = "on_llm_end"
         if token_usage is not None:
-            openai_tokens = LangchainOpenAITokens(
+            llm_tokens = LLMTokens(
                 execution_step=execution_step,
                 ml_model_type='llm',
-                ml_model_name=get_safe_dict_value(response.llm_output, 'model_name'),
+                ml_model_name=get_safe_dict_value(response.llm_output, 'model_name') if response.llm_output is not None else "fake_chat_model",
                 other_tags=','.join(list(tags)),
             )
-            self.ln_metrics.add_openai_tokens_usage(openai_tokens, 'prompt_tokens',
-                                                    int(dict(token_usage)['prompt_tokens']), self.override_labels)
-            self.ln_metrics.add_openai_tokens_usage(openai_tokens, 'total_tokens',
-                                                    int(dict(token_usage)['total_tokens']), self.override_labels)
-            self.ln_metrics.add_openai_tokens_usage(openai_tokens, 'completion_tokens',
-                                                    int(dict(token_usage)['completion_tokens']), self.override_labels)
+            self.ln_metrics.add_llm_tokens_usage(llm_tokens, 'prompt_tokens',
+                                                 int(dict(token_usage)['prompt_tokens']), self.override_labels)
+            self.ln_metrics.add_llm_tokens_usage(llm_tokens, 'total_tokens',
+                                                 int(dict(token_usage)['total_tokens']), self.override_labels)
+            self.ln_metrics.add_llm_tokens_usage(llm_tokens, 'completion_tokens',
+                                                 int(dict(token_usage)['completion_tokens']), self.override_labels)
         if self.chat_model_start_metrics is not None:
 
             llm_end_metrics = LangchainChatModelMetrics(
@@ -223,7 +225,7 @@ class CallbackHandler(AsyncCallbackHandler):
         else:
             chain_err_metrics = LangchainChainMetrics(
                 lc='-1',
-                type='undefined',
+                type=c.WORD_UNDEFINED,
                 agent_type=tags[0] if len(tags) > 0 else c.WORD_UNDEFINED,
                 # run_id=str(get_safe_dict_value(kwargs, 'run_id')),
                 # parent_run_id=str(parent_run_id) if parent_run_id is not None else None,
