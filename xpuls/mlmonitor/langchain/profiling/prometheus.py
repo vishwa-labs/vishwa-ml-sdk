@@ -57,7 +57,7 @@ class LangchainToolMetrics(BaseModel):
     # chain_run_id: str
 
 
-class LangchainOpenAITokens(BaseModel):
+class LLMTokens(BaseModel):
     execution_step: str
     ml_model_type: Optional[str]
     ml_model_name: Optional[str]
@@ -84,7 +84,7 @@ class LangchainPrometheusMetrics:
     def __init__(self, default_labels: Dict[str, Any]):
         chain_fields = list(LangchainChainMetrics.__fields__.keys()) + list(default_labels.keys())
         chat_fields = list(LangchainChatModelMetrics.__fields__.keys()) + list(default_labels.keys())
-        openai_tokens_field = list(LangchainOpenAITokens.__fields__.keys()) + list(default_labels.keys()) + ['usage_type']
+        llm_tokens_field = list(LLMTokens.__fields__.keys()) + list(default_labels.keys()) + ['usage_type']
         tools_field = list(LangchainToolMetrics.__fields__.keys()) + list(default_labels.keys())
 
         self.default_labels = default_labels
@@ -98,10 +98,10 @@ class LangchainPrometheusMetrics:
             'Langchain Chat Model counter',
             chat_fields
         )
-        self.openai_tokens_counter = Counter(
-            'langchain_openai_tokens',
-            'Langchain OpenAI Tokens Count',
-            openai_tokens_field
+        self.llm_tokens_counter = Counter(
+            'langchain_llm_tokens',
+            'Langchain LLM Tokens Count',
+            llm_tokens_field
         )
 
         self.tools_usage_counter = Counter(
@@ -150,9 +150,9 @@ class LangchainPrometheusMetrics:
             **dict(tool_metrics, **dict(self.default_labels, **self.get_safe_override_labels(override_labels)))
         ).inc()
 
-    def add_openai_tokens_usage(self, openai_tokens: LangchainOpenAITokens,
-                                usage_type: str, token_count: int, override_labels: Dict[str, str]):
-        self.openai_tokens_counter.labels(
+    def add_llm_tokens_usage(self, openai_tokens: LLMTokens,
+                             usage_type: str, token_count: int, override_labels: Dict[str, str]):
+        self.llm_tokens_counter.labels(
             **dict(openai_tokens, **{'usage_type': usage_type},
                    **dict(self.default_labels, **self.get_safe_override_labels(override_labels)))
         ).inc(token_count)
