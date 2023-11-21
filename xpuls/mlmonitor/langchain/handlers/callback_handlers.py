@@ -94,13 +94,15 @@ class CallbackHandler(AsyncCallbackHandler):
     def on_llm_end(self, response: LLMResult, **kwargs: Any) -> Any:
         """Run when LLM ends running."""
         tags = get_safe_dict_value(kwargs, 'tags')
-        token_usage = get_safe_dict_value(response.llm_output, 'token_usage') if response.llm_output is not None else None
+        token_usage = get_safe_dict_value(response.llm_output,
+                                          'token_usage') if response.llm_output is not None else None
         execution_step = "on_llm_end"
         if token_usage is not None:
             llm_tokens = LLMTokens(
                 execution_step=execution_step,
                 ml_model_type='llm',
-                ml_model_name=get_safe_dict_value(response.llm_output, 'model_name') if response.llm_output is not None else "fake_chat_model",
+                ml_model_name=get_safe_dict_value(response.llm_output,
+                                                  'model_name') if response.llm_output is not None else "fake_chat_model",
                 other_tags=','.join(list(tags)),
             )
             self.ln_metrics.add_llm_tokens_usage(llm_tokens, 'prompt_tokens',
@@ -173,7 +175,7 @@ class CallbackHandler(AsyncCallbackHandler):
         self.chain_start_time = time.time()  # Record start time
         self.ln_metrics.add_chain_counter(self.chain_start_metrics, self.override_labels)
 
-        self.log.info(f"on_chain_start, {serialized}, {inputs}, {kwargs}")
+        self.log.debug(f"on_chain_start, {serialized}, {inputs}, {kwargs}")
 
     def on_chain_end(self, outputs: Dict[str, Any], **kwargs: Any) -> Any:
         """Run when chain ends running."""
@@ -201,8 +203,7 @@ class CallbackHandler(AsyncCallbackHandler):
                 execution_step='on_chain_end',
 
             )
-
-        elapsed_time = time.time() - self.chat_start_time
+        elapsed_time = time.time() - self.chain_start_time
 
         self.ln_metrics.add_chain_counter(chain_end_metrics, self.override_labels)
         self.ln_metrics.observe_chain_latency(chain_end_metrics, elapsed_time, self.override_labels)
@@ -237,7 +238,7 @@ class CallbackHandler(AsyncCallbackHandler):
 
             )
 
-        elapsed_time = time.time() - self.llm_start_time
+        elapsed_time = time.time() - self.chain_start_time
 
         self.ln_metrics.add_chain_counter(chain_err_metrics, self.override_labels)
         self.ln_metrics.observe_chain_latency(chain_err_metrics, elapsed_time, self.override_labels)
