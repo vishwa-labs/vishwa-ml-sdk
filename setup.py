@@ -22,7 +22,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='xpuls-mlmonitor',
-    version='0.1.1',
+    version='0.2.0',
     author='Sai Sharan Tangeda',
     author_email='saisarantangeda@gmail.com',
     description='Automated telemetry and monitoring for ML & LLM Frameworks',
