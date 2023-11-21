@@ -2,9 +2,8 @@ import logging
 import os
 
 import openai
-from langchain.agents import initialize_agent, AgentType
 from langchain.chat_models import AzureChatOpenAI
-from langchain.memory import ConversationBufferMemory
+from langchain.prompts import ChatPromptTemplate
 
 from xpuls.mlmonitor.langchain.decorators.map_xpuls_project import MapXpulsProject
 from xpuls.mlmonitor.langchain.decorators.telemetry_override_labels import TelemetryOverrideLabels
@@ -30,7 +29,6 @@ LangchainTelemetry(
     xpuls_host_url="http://localhost:8000"
 ).auto_instrument()
 
-memory = ConversationBufferMemory(memory_key="chat_history")
 chat_model = AzureChatOpenAI(
     deployment_name="gpt35turbo",
     model_name="gpt-35-turbo",
@@ -41,20 +39,10 @@ chat_model = AzureChatOpenAI(
 @TelemetryOverrideLabels(agent_name="chat_agent_alpha")
 @MapXpulsProject(project_id="default")  # Get Project ID from console
 def run_openai_agent():
-    agent = initialize_agent(llm=chat_model,
-                             verbose=True,
-                             tools=[],
-                             agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
-                             memory=memory,
-                             # handle_parsing_errors="Check your output and make sure it conforms!",
-                             return_intermediate_steps=False,
-                             agent_executor_kwargs={"extra_prompt_messages": "test"})
-
+    prompt = ChatPromptTemplate.from_template("tell me a joke about {foo}")
+    chain = prompt | chat_model
     try:
-        res = agent.run("You are to behave as a think tank to answer the asked question in most creative way,"
-                        " ensure to NOT be abusive or racist, you should validate your response w.r.t to validity "
-                        "in practical world before giving final answer" +
-                        f"\nQuestion: How does nature work?, is balance of life true? \n")
+        res = chain.invoke({"foo": "bears"})
     except ValueError as e:
         res = str(e)
         if not res.startswith("Could not parse LLM output: `"):
