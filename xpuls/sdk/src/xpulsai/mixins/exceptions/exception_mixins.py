@@ -109,16 +109,15 @@ class ExpiredToken(ExceptionMixins):
         message: str = "Invalid Token.",
         error_code: int | None = 401,
         exception: Exception | None = None,
-        obj: Client | None = None,
     ):
         super().__init__(message, error_code, exception)
-        self.obj = obj
 
-    def handler(self):
+    @staticmethod
+    def handler(client: Client):
         """Handle Expired Token."""
         try:
-            if self.obj:
-                self.obj.re_authenticate()
+            if client:
+                client.re_authenticate()
             else:
                 raise InvalidParameter(message="Client Object Not Found.")
         except Exception as e:
@@ -184,6 +183,18 @@ class ConnectionError_(ExceptionMixins, ConnectionError):
         self,
         message: str = "Connection Error.",
         error_code: int | None = 408,
+        exception: Exception | None = None,
+    ):
+        super().__init__(message, error_code, exception)
+
+
+class UserNotAuthenticated(ExceptionMixins):
+    """User Not Authenticated."""
+
+    def __init__(
+        self,
+        message: str = "User Not Authenticated.",
+        error_code: int | None = 401,
         exception: Exception | None = None,
     ):
         super().__init__(message, error_code, exception)
