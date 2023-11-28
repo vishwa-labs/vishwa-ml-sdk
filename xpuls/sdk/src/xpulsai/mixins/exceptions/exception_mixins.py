@@ -112,21 +112,6 @@ class ExpiredToken(ExceptionMixins):
     ):
         super().__init__(message, error_code, exception)
 
-    @staticmethod
-    def handler(client: Client):
-        """Handle Expired Token."""
-        try:
-            if client:
-                client.re_authenticate()
-            else:
-                raise InvalidParameter(message="Client Object Not Found.")
-        except Exception as e:
-            if getattr(e, "reason") == "Subscription Expired":
-                raise SubscriptionExpired(exception=e) from e
-            if getattr(e, "reason") == "Invalid Credentials":
-                raise InvalidCredentials(exception=e) from e
-            raise e
-
 
 class AuthenticationError(ExceptionMixins):
     """Authentication Error."""

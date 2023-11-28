@@ -24,8 +24,8 @@ class Manage(Client):
             return make_request_with_retries(
                 USER_GET_KEYS_ENDPOINT, method="GET", token=self._token
             )
-        except ExpiredToken:
-            ExpiredToken.handler(self)
+        except Exception as e:
+            raise e
 
     def add_key(self, key: str):
         """Add a key to your account."""
@@ -36,9 +36,6 @@ class Manage(Client):
                 token=self._token,
                 data={"key": key},
             )
-        except ExpiredToken:
-            ExpiredToken.handler(self)
-
         except Exception as e:
             raise e
 
@@ -51,8 +48,6 @@ class Manage(Client):
                 token=self._token,
                 data={"key": key},
             )
-        except ExpiredToken:
-            ExpiredToken.handler(self)
 
         except Exception as e:
             raise e
