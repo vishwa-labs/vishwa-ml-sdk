@@ -1,7 +1,6 @@
 """Exception Mixins."""
 
 from xpulsai.client import Client
-from xpulsai.mixins.auth import AuthenticateMixin
 
 
 class ExceptionMixins(Exception):
@@ -118,7 +117,10 @@ class ExpiredToken(ExceptionMixins):
     def handler(self):
         """Handle Expired Token."""
         try:
-            AuthenticateMixin.re_authenticate(self.obj)
+            if self.obj:
+                self.obj.re_authenticate()
+            else:
+                raise InvalidParameter(message="Client Object Not Found.")
         except Exception as e:
             if getattr(e, "reason") == "Subscription Expired":
                 raise SubscriptionExpired(exception=e) from e

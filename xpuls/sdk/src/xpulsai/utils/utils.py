@@ -60,7 +60,6 @@ def make_request_with_retries(url, method="get", max_retries=3, **kwargs) -> Dic
                 raise RequestTimedOut(exception=e) from e
             if isinstance(e, requests.exceptions.ConnectionError):
                 raise ConnectionError_(exception=e) from e
-
             if getattr(response, "reason") == "Token Expired":
                 raise ExpiredToken(exception=e) from e
 

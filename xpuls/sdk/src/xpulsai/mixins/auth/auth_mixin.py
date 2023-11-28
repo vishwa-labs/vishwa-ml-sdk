@@ -36,14 +36,13 @@ class AuthenticateMixin(ABC):
         except Exception as e:
             raise InvalidCredentials(exception=e) from e
 
-    @staticmethod
-    def re_authenticate(obj):
+    def re_authenticate(self):
         """Re-Authenticate."""
-        obj.is_authenticated = False
-        obj._authenticate()
+        self.is_authenticated = False
+        self._authenticate()
 
     def check_auth(self):
         """Check if authenticated."""
         if not self.is_authenticated:
-            self.re_authenticate(self)
+            self.re_authenticate()
         return True
