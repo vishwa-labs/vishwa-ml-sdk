@@ -21,13 +21,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name='xpuls-mlmonitor',
-    version='0.2.0',
+    name='xpuls-ml-sdk',
+    version='0.3.0',
     author='Sai Sharan Tangeda',
     author_email='saisarantangeda@gmail.com',
     description='Automated telemetry and monitoring for ML & LLM Frameworks',
     license='Apache License 2.0',
-    url='https://github.com/xpuls-labs/xpuls-mlmonitor-python',
+    url='https://github.com/xpuls-labs/xpuls-ml-sdk',
     packages=find_packages(),
     install_requires=read_requirements('requirements.txt'),
     extras_require={

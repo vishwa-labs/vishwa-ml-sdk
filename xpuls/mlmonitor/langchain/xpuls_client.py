@@ -1,7 +1,7 @@
 import functools
 import os
 import weakref
-from typing import Optional, Mapping
+from typing import Optional, Mapping, Dict
 
 import requests
 from langsmith import Client
@@ -10,6 +10,9 @@ from urllib3 import Retry
 from requests import adapters as requests_adapters
 from urllib import parse as urllib_parse
 import socket
+
+import xpuls
+from xpuls.client import constants
 
 
 def _is_localhost(url: str) -> bool:
@@ -34,7 +37,7 @@ def _is_localhost(url: str) -> bool:
 
 
 def _get_api_key(api_key: Optional[str]) -> Optional[str]:
-    api_key = api_key if api_key is not None else os.getenv("XPULSAI_API_KEY")
+    api_key = api_key if api_key is not None else xpuls.api_key
     if api_key is None or not api_key.strip():
         return None
     return api_key.strip().strip('"').strip("'")
@@ -44,10 +47,7 @@ def _get_api_url(api_url: Optional[str], api_key: Optional[str]) -> str:
     _api_url = (
         api_url
         if api_url is not None
-        else os.getenv(
-            "XPULSAI_ENDPOINT",
-            "https://api.xpuls.ai" if api_key else "http://localhost:8000",
-        )
+        else xpuls.host_url
     )
     if not _api_url.strip():
         raise Exception("XpulsAI API URL cannot be empty")
@@ -119,6 +119,21 @@ class XpulsAILangChainClient(Client):
             link = self.api_url
         return link
 
+    @property
+    def _headers(self) -> Dict[str, str]:
+        """Get the headers for the API request.
+
+        Returns
+        -------
+        Dict[str, str]
+            The headers for the API request.
+        """
+        headers = {}
+        if self.api_key:
+            headers["XP-API-Key"] = self.api_key
+        return headers
+
+
     def request_with_retries(
         self,
         request_method: str,
@@ -141,18 +156,9 @@ class XpulsAILangChainClient(Client):
         Response
             The response object.
 
-        Raises
-        ------
-        LangSmithAPIError
-            If a server error occurs.
-        LangSmithUserError
-            If the request fails.
-        LangSmithConnectionError
-            If a connection error occurs.
-        LangSmithError
-            If the request fails.
         """
         try:
+            # print(request_kwargs)
             response = self.session.request(
                 request_method, url, stream=False, **request_kwargs
             )
@@ -171,7 +177,7 @@ class XpulsAILangChainClient(Client):
         except requests.ConnectionError as e:
             raise Exception(
                 f"Connection error caused failure to {request_method} {url}"
-                "  in XpulsAI API. Please confirm your XPULSAI_ENDPOINT."
+                "  in XpulsAI API. Set environment variable `XPULSAI_HOST_URL`"
                 f" {e}"
             ) from e
         except ValueError as e:
