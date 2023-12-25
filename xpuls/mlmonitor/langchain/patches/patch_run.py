@@ -7,6 +7,8 @@ from langchain.chains.base import Chain
 from langchain.schema.runnable import RunnableConfig, RunnableSequence
 from langsmith import Client
 
+import xpuls
+from xpuls.client.models import XPPrompt
 from xpuls.mlmonitor.langchain.decorators.telemetry_override_labels import TelemetryOverrideLabels
 from xpuls.mlmonitor.langchain.decorators.map_xpuls_project import MapXpulsProject
 from xpuls.mlmonitor.langchain.handlers.callback_handlers import CallbackHandler
@@ -21,7 +23,7 @@ def patch_run(ln_metrics: LangchainPrometheusMetrics, xpuls_client: XpulsAILangC
     original_run = Chain.run
     original_arun = Chain.arun
 
-    def _apply_patch(kwargs,):
+    def _apply_patch(kwargs, prompt: Optional[XPPrompt] = None):
         override_labels = get_scoped_override_labels()
         project_details = get_scoped_project_info()
 
@@ -35,15 +37,18 @@ def patch_run(ln_metrics: LangchainPrometheusMetrics, xpuls_client: XpulsAILangC
 
         callback_handler = CallbackHandler(ln_metrics, chain_run_id, override_labels)
 
-        with ln_metrics.agent_run_histogram.labels(**dict(ln_metrics.get_default_labels(), **override_labels)).time():
+        with ln_metrics.agent_run_histogram.labels(**updated_labels).time():
             if 'callbacks' in kwargs:
                 kwargs['callbacks'].append(callback_handler)
             else:
                 kwargs['callbacks'] = [callback_handler]
 
-            if os.getenv("XPULSAI_TRACING_ENABLED", "false") == "true":
+            if xpuls.adv_tracing_enabled == "true":
                 kwargs['callbacks'].append(ln_tracer)
             metadata = {'xpuls': {'labels': updated_labels, 'run_id': chain_run_id,
+                                  'prompt_id': prompt.prompt_id if prompt is not None else None,
+                                  'prompt_external_id': prompt.prompt_external_id if prompt is not None else None,
+                                  'prompt_version_id': prompt.prompt_version_id if prompt is not None else None,
                                   'project_id': project_details['project_id'] if project_details[
                                                                                      'project_id'] is not None else
                                   project_details['project_slug']}}
@@ -54,6 +59,11 @@ def patch_run(ln_metrics: LangchainPrometheusMetrics, xpuls_client: XpulsAILangC
         return kwargs, ln_tracer, updated_labels
 
     def patched_run(self, *args, **kwargs):
+        if args and not kwargs:
+            if len(args) == 1 and isinstance(args[0], XPPrompt):
+                updated_kwargs, ln_tracer, updated_labels = _apply_patch(kwargs, args[0])
+                prompt_text = args[0].prompt
+                return original_run(self, prompt_text, **updated_kwargs)
 
         updated_kwargs, ln_tracer, updated_labels = _apply_patch(kwargs)
 
@@ -61,6 +71,12 @@ def patch_run(ln_metrics: LangchainPrometheusMetrics, xpuls_client: XpulsAILangC
         return original_run(self, *args, **updated_kwargs)
 
     async def patched_arun(self, *args, **kwargs):
+        if args and not kwargs:
+            if len(args) == 1 and isinstance(args[0], XPPrompt):
+                updated_kwargs, ln_tracer, updated_labels = _apply_patch(kwargs, args[0])
+                prompt_text = args[0].prompt
+                return original_arun(self, prompt_text, **updated_kwargs)
+
         updated_kwargs, ln_tracer, updated_labels = _apply_patch(kwargs)
 
         # Call the original run method

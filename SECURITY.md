@@ -1,6 +1,6 @@
 # Security Policy
 
-xpuls.ai is looking forward to working with security researchers across the world to keep xpuls-mlmonitor-python along with other products  and our users safe. If you have found an issue in our systems/applications, please reach out to us.
+xpxuls.ai is looking forward to working with security researchers across the world to keep xpuls-ml-sdk along with other products and our users safe. If you have found an issue in our systems/applications, please reach out to us.
 
 ## Supported Versions
 We always recommend using the latest version of xpuls.ai to ensure you get all security updates
