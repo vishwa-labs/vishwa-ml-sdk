@@ -13,7 +13,7 @@ app = FastAPI(
     version="0.0.1"
 )
 app.add_middleware(GZipMiddleware, minimum_size=1000)
-app.add_middleware(PrometheusMiddleware, app_name=service_name, group_paths=True)
+app.add_middleware(PrometheusMiddleware, app_name=service_name, group_paths=True, filter_unhandled_paths=True)
 app.add_route("/metrics", handle_metrics)  # Metrics are published at this endpoint
 
 # Initialise xpuls.ai
