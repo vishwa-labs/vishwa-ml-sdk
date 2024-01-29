@@ -1,4 +1,4 @@
-# Welcome to vishwa.ai 👋 
+# Welcome to vishwa.ai (formerly xpuls.ai) 👋 
 
 ## vishwa-ml-sdk
 [![Twitter Follow](https://img.shields.io/twitter/follow/vishwa_ai?style=social)](https://x.com/vishwa_ai) [![Discord](https://img.shields.io/badge/Discord-Join-1147943825592045689?style=social)](https://social.vishwa.ai/join/discord)
