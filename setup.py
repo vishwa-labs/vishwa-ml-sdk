@@ -22,7 +22,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='vishwa-ml-sdk',
-    version='0.3.0',
+    version='0.4.0',
     author='Sai Sharan Tangeda',
     author_email='saisarantangeda@gmail.com',
     description='Integration SDK for vishwa.ai',
