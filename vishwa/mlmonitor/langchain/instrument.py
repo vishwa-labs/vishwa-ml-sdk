@@ -1,9 +1,9 @@
 from typing import Dict, Any, Optional
 
-from xpuls.mlmonitor.langchain.patches import patch_run
-from xpuls.mlmonitor.langchain.patches.patch_invoke import patch_invoke
-from xpuls.mlmonitor.langchain.profiling.prometheus import LangchainPrometheusMetrics
-from xpuls.mlmonitor.langchain.xpuls_client import XpulsAILangChainClient
+from vishwa.mlmonitor.langchain.patches import patch_run
+from vishwa.mlmonitor.langchain.patches.patch_invoke import patch_invoke
+from vishwa.mlmonitor.langchain.profiling.prometheus import LangchainPrometheusMetrics
+from vishwa.mlmonitor.langchain.xpuls_client import XpulsAILangChainClient
 
 
 class LangchainTelemetry:

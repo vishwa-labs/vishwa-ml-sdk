@@ -21,13 +21,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name='xpuls-ml-sdk',
+    name='vishwa-ml-sdk',
     version='0.3.0',
     author='Sai Sharan Tangeda',
     author_email='saisarantangeda@gmail.com',
-    description='Automated telemetry and monitoring for ML & LLM Frameworks',
+    description='Integration SDK for vishwa.ai',
     license='Apache License 2.0',
-    url='https://github.com/xpuls-labs/xpuls-ml-sdk',
+    url='https://github.com/vishwa-labs/vishwa-ml-sdk',
     packages=find_packages(),
     install_requires=read_requirements('requirements.txt'),
     extras_require={

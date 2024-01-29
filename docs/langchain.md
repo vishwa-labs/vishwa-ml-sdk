@@ -2,11 +2,12 @@
 ## Langchain Documentation
 
 ### Basic Usage
+
 ```python
-from xpuls.mlmonitor.langchain.instrument import LangchainTelemetry
+from vishwa.mlmonitor.langchain.instrument import LangchainTelemetry
 
 # Add default labels that will be added to all captured metrics
-default_labels = {"service": "ml-project-service", "k8s-cluster": "app0", "namespace": "dev",  
+default_labels = {"service": "ml-project-service", "k8s-cluster": "app0", "namespace": "dev",
                   "agent_name": "fallback_value"}
 
 # Enable the auto-telemetry

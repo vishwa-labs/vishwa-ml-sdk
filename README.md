@@ -1,16 +1,16 @@
-# Welcome to xpuls.ai 👋 
+# Welcome to vishwa.ai 👋 
 
-## xpuls-ml-sdk
-[![Twitter Follow](https://img.shields.io/twitter/follow/xpulsai?style=social)](https://x.com/xpulsai) [![Discord](https://img.shields.io/badge/Discord-Join-1147943825592045689?style=social)](https://social.xpuls.ai/join/discord)
+## vishwa-ml-sdk
+[![Twitter Follow](https://img.shields.io/twitter/follow/vishwa_ai?style=social)](https://x.com/vishwa_ai) [![Discord](https://img.shields.io/badge/Discord-Join-1147943825592045689?style=social)](https://social.vishwa.ai/join/discord)
 
 
 
 <div align="center">
-<a href="https://xpuls.ai">Website</a> | <a href="https://xpuls.ai/docs">Docs</a> | <a href="https://xpuls.ai/articles">Articles</a> | <a href="https://x.com/xpulsai">Twitter</a> | <a href="https://social.xpuls.ai/join/discord">Community</a>
+<a href="https://vishwa.ai">Website</a> | <a href="https://vishwa.ai/docs">Docs</a> | <a href="https://vishwa.ai/news">News</a> | <a href="https://x.com/vishwa_ai">Twitter</a> | <a href="https://social.vishwa.ai/join/discord">Discord</a>
 </div>
 
-[![PyPI version](https://badge.fury.io/py/xpuls-mlmonitor.svg)](https://badge.fury.io/py/xpuls-mlmonitor)
-[![GitHub version](https://badge.fury.io/gh/xpuls-labs%2Fxpuls-mlmonitor-python.svg)](https://badge.fury.io/gh/xpuls-labs%2Fxpuls-mlmonitor-python)
+[![PyPI version](https://badge.fury.io/py/vishwa-ml-sdk.svg)](https://badge.fury.io/py/vishwa-ml-sdk)
+[![GitHub version](https://badge.fury.io/gh/vishwa-labs%2Fvishwa-ml-sdk.svg)](https://badge.fury.io/gh/vishwa-labs%2Fvishwa-ml-sdk)
 
 ## Roadmap 🚀
 
@@ -24,27 +24,27 @@
 | Stable Diffusion | Next    |
 
 
-### 💡 If support of any framework/feature is useful for you, please feel free to reach out to us via [Discord](https://social.xpuls.ai/join/discord) or Github Discussions
+### 💡 If support of any framework/feature is useful for you, please feel free to reach out to us via [Discord](https://social.vishwa.ai/join/discord) or Github Discussions
 
 
 ## 🔗 Installation 
 
 1. Install from PyPI
 ```shell
-pip install xpuls-ml-sdk
+pip install vishwa-ml-sdk
 ```
 
 ## 🧩 Usage Example 
 ```python
-from xpuls.mlmonitor.langchain.instrument import LangchainTelemetry
+from vishwa.mlmonitor.langchain.instrument import LangchainTelemetry
 import os
-import xpuls
-from xpuls.prompt_hub import PromptClient
+import vishwa
+from vishwa.prompt_hub import PromptClient
 
-# Enable this for advance tracking with our xpuls-ml platform
-xpuls.host_url = "https://api.xpuls.ai"
-xpuls.api_key = "********************"  # Get from https://platform.xpuls.ai
-xpuls.adv_tracing_enabled = "true" # Enable this for automated insights and log tracing via xpulsAI platform
+# Enable this for advance tracking with our vishwa-ai platform
+vishwa.host_url = "https://api.vishwa.ai"
+vishwa.api_key = "********************"  # Get from https://platform.vishwa.ai
+vishwa.adv_tracing_enabled = "true" # Enable this for automated insights and log tracing via xpulsAI platform
 # Add default labels that will be added to all captured metrics
 default_labels = {"service": "ml-project-service", "k8s_cluster": "app0", "namespace": "dev", "agent_name": "fallback_value"}
 
@@ -57,7 +57,7 @@ prompt_client = PromptClient(
 
 ## [Optional] Override labels for scope of decorator [Useful if you have multiple scopes where you need to override the default label values]
 @TelemetryOverrideLabels(agent_name="chat_agent_alpha")
-@MapXpulsProject(project_slug="defaultoPIt9USSR")  # Get Project Slug from platform
+@TagToProject(project_slug="defaultoPIt9USSR")  # Get Project Slug from platform
 def get_response_using_agent_alpha(prompt, query):
     agent = initialize_agent(llm=chat_model,
                              verbose=True,
@@ -87,8 +87,8 @@ If you encounter any issues or have feature requests, please file an issue on ou
 
 ## 💬 Get in touch 
 
-👉 [Join our Discord community!](https://social.xpuls.ai/join/discord)
+👉 [Join our Discord community!](https://social.vishwa.ai/join/discord)
 
-🐦 Follow the latest from xpuls.ai team on Twitter [@xpulsai](https://twitter.com/xpulsai)
+🐦 Follow the latest from vishwa.ai team on Twitter [@vishwa_ai](https://twitter.com/vishwa_ai)
 
-📮 Write to us at [hello\@xpuls.ai](mailto:hello@xpuls.ai)
+📮 Write to us at [hello\@vishwa.ai](mailto:hello@vishwa.ai)

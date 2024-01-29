@@ -24,7 +24,7 @@ Name your Pull Request with one of the following prefixes, e.g. "feat: add suppo
 Describe your changes in detail. Attach screenshots here if appropriate.
 
 
-Once you're done with this, someone from xpuls-labs core team or extended team will help review your PR. If no one has reviewed your PR after a week have passed, don't hesitate to post a new comment and ping @SHARANTANGEDA. Notifications sometimes might get lost 🥲.
+Once you're done with this, someone from vishwa-labs core team or extended team will help review your PR. If no one has reviewed your PR after a week have passed, don't hesitate to post a new comment and ping @SHARANTANGEDA. Notifications sometimes might get lost 🥲.
 -->
 
 <!-- Remove if not applicable -->

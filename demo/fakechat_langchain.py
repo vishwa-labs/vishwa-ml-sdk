@@ -6,16 +6,16 @@ from langchain.agents import initialize_agent, AgentType
 from langchain.chat_models import ChatOpenAI, FakeListChatModel
 from langchain.memory import ConversationBufferMemory
 
-from xpuls.mlmonitor.langchain.decorators.map_xpuls_project import MapXpulsProject
-from xpuls.mlmonitor.langchain.decorators.telemetry_override_labels import TelemetryOverrideLabels
-from xpuls.mlmonitor.langchain.instrument import LangchainTelemetry
+from vishwa.mlmonitor.langchain.decorators.map_xpuls_project import MapXpulsProject
+from vishwa.mlmonitor.langchain.decorators.telemetry_override_labels import TelemetryOverrideLabels
+from vishwa.mlmonitor.langchain.instrument import LangchainTelemetry
 
 logger = logging.getLogger(__name__)
 
 
 # Set this to enable Advanced prompt tracing with server
-# os.environ["XPULSAI_TRACING_ENABLED"] = "false"
-os.environ["XPULSAI_TRACING_ENABLED"] = "false"
+# os.environ["VISHWA_TRACING_ENABLED"] = "false"
+os.environ["VISHWA_TRACING_ENABLED"] = "false"
 
 default_labels = {"system": "openai-ln-test", "agent_name": "fallback_value"}
 

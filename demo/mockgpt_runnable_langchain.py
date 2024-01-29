@@ -4,12 +4,12 @@ import os
 import openai
 from langchain.chat_models import AzureChatOpenAI
 
-import xpuls
-from xpuls.mlmonitor.langchain.decorators.map_xpuls_project import MapXpulsProject
-from xpuls.mlmonitor.langchain.decorators.telemetry_override_labels import TelemetryOverrideLabels
-from xpuls.mlmonitor.langchain.instrument import LangchainTelemetry
-from xpuls.mlmonitor.langchain.patches.xp_prompt_template import XPChatPromptTemplate
-from xpuls.prompt_hub import PromptClient
+import vishwa
+from vishwa.mlmonitor.langchain.decorators.map_xpuls_project import MapXpulsProject
+from vishwa.mlmonitor.langchain.decorators.telemetry_override_labels import TelemetryOverrideLabels
+from vishwa.mlmonitor.langchain.instrument import LangchainTelemetry
+from vishwa.mlmonitor.langchain.patches.xp_prompt_template import XPChatPromptTemplate
+from vishwa.prompt_hub import PromptClient
 
 logger = logging.getLogger(__name__)
 
@@ -24,9 +24,9 @@ openai.api_version = "2023-03-15-preview"
 
 
 default_labels = {"system": "openai-ln-test", "agent_name": "fallback_value"}
-xpuls.host_url = "https://test-api.xpuls.ai"
-xpuls.api_key = "****************************************"
-xpuls.adv_tracing_enabled = "true"
+vishwa.host_url = "https://test-api.vishwa.ai"
+vishwa.api_key = "****************************************"
+vishwa.adv_tracing_enabled = "true"
 
 LangchainTelemetry(
     default_labels=default_labels,

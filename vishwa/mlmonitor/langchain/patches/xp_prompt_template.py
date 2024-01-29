@@ -7,7 +7,7 @@ from langchain.prompts import ChatPromptTemplate, HumanMessagePromptTemplate
 from langchain.schema import PromptValue
 from langchain.schema.runnable import RunnableConfig
 
-from xpuls.client.models import XPPrompt
+from vishwa.client.models import XPPrompt
 
 
 class XPChatPromptTemplate(ChatPromptTemplate, ABC):

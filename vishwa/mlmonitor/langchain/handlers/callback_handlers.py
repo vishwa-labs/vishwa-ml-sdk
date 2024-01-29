@@ -8,9 +8,9 @@ from langchain.schema.output import LLMResult
 from langchain.schema.messages import BaseMessage
 from langchain.schema.agent import AgentAction, AgentFinish
 
-from xpuls.mlmonitor.langchain.profiling.prometheus import LangchainChainMetrics, LangchainPrometheusMetrics, \
+from vishwa.mlmonitor.langchain.profiling.prometheus import LangchainChainMetrics, LangchainPrometheusMetrics, \
     LangchainChatModelMetrics, LLMTokens, LangchainToolMetrics
-from xpuls.mlmonitor.utils.common import get_safe_dict_value
+from vishwa.mlmonitor.utils.common import get_safe_dict_value
 
 from . import constants as c
 # Set the tracer provider and a console exporter

@@ -1,5 +1,5 @@
-from xpuls.mlmonitor.langchain.decorators.map_xpuls_project import MapXpulsProject
-from xpuls.mlmonitor.langchain.decorators.telemetry_override_labels import TelemetryOverrideLabels
+from vishwa.mlmonitor.langchain.decorators.map_xpuls_project import MapXpulsProject
+from vishwa.mlmonitor.langchain.decorators.telemetry_override_labels import TelemetryOverrideLabels
 
 
 def get_scoped_override_labels():
