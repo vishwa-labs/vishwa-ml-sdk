@@ -1,5 +1,5 @@
 name:  Report a bug (🐛)
-description: Create a bug report to help us improve xpuls-mlmonitor.
+description: Create a bug report to help us improve vishwa-ml-sdk
 title: "bug: "
 labels: ["bug"]
 body:

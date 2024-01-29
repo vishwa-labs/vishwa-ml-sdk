@@ -1,8 +1,8 @@
 from typing import Dict
 import re
 
-from xpuls.client import XpulsAIClient
-from xpuls.client.models import XPPrompt
+from vishwa.client import XpulsAIClient
+from vishwa.client.models import XPPrompt
 
 
 class PromptClient:

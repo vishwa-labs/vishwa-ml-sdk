@@ -11,8 +11,8 @@ from requests import adapters as requests_adapters
 from urllib import parse as urllib_parse
 import socket
 
-import xpuls
-from xpuls.client import constants
+import vishwa
+from vishwa.client import constants
 
 
 def _is_localhost(url: str) -> bool:
@@ -37,7 +37,7 @@ def _is_localhost(url: str) -> bool:
 
 
 def _get_api_key(api_key: Optional[str]) -> Optional[str]:
-    api_key = api_key if api_key is not None else xpuls.api_key
+    api_key = api_key if api_key is not None else vishwa.api_key
     if api_key is None or not api_key.strip():
         return None
     return api_key.strip().strip('"').strip("'")
@@ -47,7 +47,7 @@ def _get_api_url(api_url: Optional[str], api_key: Optional[str]) -> str:
     _api_url = (
         api_url
         if api_url is not None
-        else xpuls.host_url
+        else vishwa.host_url
     )
     if not _api_url.strip():
         raise Exception("XpulsAI API URL cannot be empty")

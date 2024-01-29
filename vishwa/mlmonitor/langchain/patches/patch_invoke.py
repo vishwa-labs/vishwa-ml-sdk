@@ -10,12 +10,12 @@ from langchain.schema.runnable import RunnableConfig, RunnableSequence
 from langchain.schema.runnable.base import Input
 from langchain.schema.runnable.config import ensure_config
 
-import xpuls
-from xpuls.mlmonitor.langchain.handlers.callback_handlers import CallbackHandler
-from xpuls.mlmonitor.langchain.patches.utils import get_scoped_override_labels, get_scoped_project_info
-from xpuls.mlmonitor.langchain.profiling.prometheus import LangchainPrometheusMetrics
-from xpuls.mlmonitor.langchain.xpuls_client import XpulsAILangChainClient
-from xpuls.mlmonitor.utils.common import find_key_in_nested_json
+import vishwa
+from vishwa.mlmonitor.langchain.handlers.callback_handlers import CallbackHandler
+from vishwa.mlmonitor.langchain.patches.utils import get_scoped_override_labels, get_scoped_project_info
+from vishwa.mlmonitor.langchain.profiling.prometheus import LangchainPrometheusMetrics
+from vishwa.mlmonitor.langchain.xpuls_client import XpulsAILangChainClient
+from vishwa.mlmonitor.utils.common import find_key_in_nested_json
 
 
 def patch_invoke(ln_metrics: LangchainPrometheusMetrics, xpuls_client: XpulsAILangChainClient):
@@ -49,7 +49,7 @@ def patch_invoke(ln_metrics: LangchainPrometheusMetrics, xpuls_client: XpulsAILa
             else:
                 updated_config['callbacks'] = [callback_handler]
 
-            if xpuls.adv_tracing_enabled == "true":
+            if vishwa.adv_tracing_enabled == "true":
                 updated_config['callbacks'].append(ln_tracer)
             metadata = {'xpuls': {'labels': updated_labels, 'run_id': chain_run_id,
                                   'project_id': project_details['project_id'] if project_details[

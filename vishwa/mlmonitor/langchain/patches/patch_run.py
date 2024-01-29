@@ -7,15 +7,15 @@ from langchain.chains.base import Chain
 from langchain.schema.runnable import RunnableConfig, RunnableSequence
 from langsmith import Client
 
-import xpuls
-from xpuls.client.models import XPPrompt
-from xpuls.mlmonitor.langchain.decorators.telemetry_override_labels import TelemetryOverrideLabels
-from xpuls.mlmonitor.langchain.decorators.map_xpuls_project import MapXpulsProject
-from xpuls.mlmonitor.langchain.handlers.callback_handlers import CallbackHandler
-from xpuls.mlmonitor.langchain.patches.utils import get_scoped_project_info, get_scoped_override_labels
+import vishwa
+from vishwa.client.models import XPPrompt
+from vishwa.mlmonitor.langchain.decorators.telemetry_override_labels import TelemetryOverrideLabels
+from vishwa.mlmonitor.langchain.decorators.map_xpuls_project import MapXpulsProject
+from vishwa.mlmonitor.langchain.handlers.callback_handlers import CallbackHandler
+from vishwa.mlmonitor.langchain.patches.utils import get_scoped_project_info, get_scoped_override_labels
 
-from xpuls.mlmonitor.langchain.profiling.prometheus import LangchainPrometheusMetrics
-from xpuls.mlmonitor.langchain.xpuls_client import XpulsAILangChainClient
+from vishwa.mlmonitor.langchain.profiling.prometheus import LangchainPrometheusMetrics
+from vishwa.mlmonitor.langchain.xpuls_client import XpulsAILangChainClient
 
 
 def patch_run(ln_metrics: LangchainPrometheusMetrics, xpuls_client: XpulsAILangChainClient):
@@ -43,7 +43,7 @@ def patch_run(ln_metrics: LangchainPrometheusMetrics, xpuls_client: XpulsAILangC
             else:
                 kwargs['callbacks'] = [callback_handler]
 
-            if xpuls.adv_tracing_enabled == "true":
+            if vishwa.adv_tracing_enabled == "true":
                 kwargs['callbacks'].append(ln_tracer)
             metadata = {'xpuls': {'labels': updated_labels, 'run_id': chain_run_id,
                                   'prompt_id': prompt.prompt_id if prompt is not None else None,

@@ -5,15 +5,15 @@ import requests
 import time
 import logging
 
-import xpuls
-from xpuls.client import constants
-from xpuls.client.models import PromptResponseData
+import vishwa
+from vishwa.client import constants
+from vishwa.client.models import PromptResponseData
 
 
 class XpulsAIClient:
     def __init__(self):
-        self._host_url = xpuls.host_url
-        self._api_key = xpuls.api_key
+        self._host_url = vishwa.host_url
+        self._api_key = vishwa.api_key
 
         self._headers = {"XP-API-Key": self._api_key}
 
